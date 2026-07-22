@@ -14,3 +14,8 @@
     transform: scale(1.009); 
 }
 
+.link {
+    text-decoration: none;
+    color: black;
+}
+
