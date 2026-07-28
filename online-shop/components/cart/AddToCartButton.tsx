@@ -3,10 +3,12 @@ import { useCart } from "./CartContext";
 import { products } from "@/db/schemas";
 import styles from "./CartButton.module.css";
 
+
 type Product = typeof products.$inferSelect;
 
 export default function AddToCartButton({ product }: { product: Product }) {
   const { addToCart, removeFromCart } = useCart();
+
 
   return (
 <>

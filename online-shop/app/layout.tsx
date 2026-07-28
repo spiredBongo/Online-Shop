@@ -1,6 +1,7 @@
 import Link from "next/link";
 import styles from "./layout.module.css";
 import CartProvider from "@/components/cart/CartProvider";
+import CartCounter from "@/components/cart/CartCounter";
 
 export default function RootLayout({
   children,
@@ -13,13 +14,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        
         <CartProvider>
 
         <header>
+
                 <div>
                 <Link href="/products"><button className = {styles.button}>Products</button></Link>
                 <Link href = "/"><button className = {styles.button}>Back to Home</button></Link>
                 </div>
+                <CartCounter />
         </header>
      
         {children}

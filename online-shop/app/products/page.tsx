@@ -1,13 +1,22 @@
-import { db } from "../../db/index";
-import { products } from "../../db/schemas";
 import ProductCard from "../../components/ProductCard";
 import styles from "./products.module.css";
 import AddToCartButton from "@/components/cart/AddToCartButton";
 import CheckCart from "@/components/cart/CheckCart";
+import FilterButtons from "./FilterButtons";
+import { getProducts, getCategoriesByName } from "@/db/queries";
  
-export default async function ProductPage() {
+export default async function ProductPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ cat?: string; sort?: string }>;
+}) {
+  const { cat, sort } = await searchParams;
 
-    const allProducts = await db.select().from(products);
+  const allProducts = await getProducts({
+    categoryId: cat ? Number(cat) : undefined,
+    sort,
+  });
+    const allCategories = await getCategoriesByName();
 
     return (
     <>
@@ -19,7 +28,7 @@ export default async function ProductPage() {
         
         <div className = {styles.grid}>
 
-            
+        <FilterButtons categories={allCategories}/>
         {allProducts.map((product) => (
         <div key={product.id}>
             <ProductCard product={product} />

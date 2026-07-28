@@ -4,10 +4,17 @@ import { products } from "@/db/schemas";
 
 type Product = typeof products.$inferSelect;
 
+export type CartItem = {
+    product: Product,
+    quantity: number
+}
+
 type CartType = {
-  items: Product[];
+  items: CartItem[];
   addToCart: (product: Product) => void;
   removeFromCart: (id: number) => void;
+  increaseQuantity: (id: number) => void;
+  decreaseQuantity: (id : number) => void;
 };
 
 const CartContext = createContext<CartType | null>(null);
