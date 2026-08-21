@@ -20,7 +20,7 @@ export default function FilterButtons( {categories} : {categories : Category[]} 
         return(
             <div>
                 {categories.map((c) =>  (
-                    <button key={c.id} onClick = {() => setCategory(c.id)}> {c.name.toLocaleUpperCase()} </button>
+                    <button key={c.id} onClick = {() => setCategory(c.id)}> {c.name } </button>
                 ))}
             </div>
         )

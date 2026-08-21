@@ -2,8 +2,9 @@ import Link from "next/link";
 import styles from "./layout.module.css";
 import CartProvider from "@/components/cart/CartProvider";
 import CartCounter from "@/components/cart/CartCounter";
+import LogoutButton  from "@/components/auth/LogoutButton";
 
-export default function RootLayout({
+export async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -22,16 +23,21 @@ export default function RootLayout({
                 <div>
                 <Link href="/products"><button className = {styles.button}>Products</button></Link>
                 <Link href = "/"><button className = {styles.button}>Back to Home</button></Link>
+                <Link href="/login"><button className = {styles.button}>Login</button></Link>
+                <Link href="/register"><button className = {styles.button}>Register</button></Link>
+                <LogoutButton />
                 </div>
                 <CartCounter />
         </header>
      
         {children}
 
-         <footer>
+         <footer> 
           <Link href="/despre" ><button className = {styles.button}>Despre noi</button></Link>
           <Link href="/contact" ><button className = {styles.button}>Contact</button></Link>
           <Link href="/cariere" ><button className = {styles.button}>Cariere</button></Link>
+          
+          Shop created by Bogdan Bosoanca, 2024. All rights reserved.
       </footer>
           </CartProvider>
       </body>

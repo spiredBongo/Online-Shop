@@ -40,7 +40,7 @@ export async function getProductBySlug(slug : string) {
         const result = await db.select()
         .from(products)
         .where(eq(products.slug, slug));
-        
+    
 
         return result[0] ?? null;
 }

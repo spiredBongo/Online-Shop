@@ -8,7 +8,7 @@ export default function CartCounter() {
 
     return (
         <>  
-            <ShoppingCart size={20} />
+            <ShoppingCart size={40} />
             <div>
                 {items.length}
             </div>
