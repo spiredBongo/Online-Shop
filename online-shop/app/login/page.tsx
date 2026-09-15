@@ -28,6 +28,7 @@ export default function Login() {
             }
 
             router.push("/products");
+            router.refresh();
 
         } catch (error) {
             setError("Login failed. Please try again." + (error instanceof Error ? ` Error: ${error.message}` : ""));

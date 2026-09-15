@@ -49,7 +49,6 @@ async function seed() {
     { name: "JBL Flip 6", slug: "jbl-flip-6", description: "Boxă portabilă, rezistentă la apă.", price: 449.99, stock: 28, categoryId: audio.id },
   ]);
 
-  console.log("Seed gata! 5 categorii, 21 produse.");
 }
 
 seed();

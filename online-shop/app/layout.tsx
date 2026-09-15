@@ -3,14 +3,17 @@ import styles from "./layout.module.css";
 import CartProvider from "@/components/cart/CartProvider";
 import CartCounter from "@/components/cart/CartCounter";
 import LogoutButton  from "@/components/auth/LogoutButton";
+import { getCurrentUser } from "@/lib/auth";
 
-export async function RootLayout({
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
 
-
+  const loggedInUser = await getCurrentUser();   
+  
 
   return (
     <html lang="en">
@@ -19,8 +22,8 @@ export async function RootLayout({
         <CartProvider>
 
         <header>
-
-                <div>
+                {loggedInUser ? <h1>Welcome, {loggedInUser.name}!</h1> : <h1>Welcome to our Online Shop!</h1>}
+                <div> 
                 <Link href="/products"><button className = {styles.button}>Products</button></Link>
                 <Link href = "/"><button className = {styles.button}>Back to Home</button></Link>
                 <Link href="/login"><button className = {styles.button}>Login</button></Link>

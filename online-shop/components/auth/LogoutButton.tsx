@@ -21,9 +21,9 @@ export default function LogoutButton() {
                 return;
             }
             
-            router.refresh();
             router.push("/");
-
+            router.refresh();
+            
         } catch (error) {
             setError("Logout failed. Please try again." + (error instanceof Error ? ` Error: ${error.message}` : ""));
         
