@@ -31,7 +31,7 @@ export const getCurrentUser = async () => {
     return session?.user ?? null;
 };
 
-export async function RequireUser() {
+export async function requireUser() {
     const user = await getCurrentUser();
     console.log("RequireUser: user = ", user);
     if (!user) {
@@ -42,8 +42,8 @@ export async function RequireUser() {
 }
 
 
-export async function RequireAdmin() {
-    const user = await RequireUser();
+export async function requireAdmin() {
+    const user = await requireUser();
     if (user.role !== "admin") {
         notFound();
     }
