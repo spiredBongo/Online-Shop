@@ -1,3 +1,5 @@
+"use server";
+
 import { IdForProductDelete, ProductSchemaValidation, ProductUpdateSchemaValidation } from "@/lib/validations";
 import { requireAdmin } from "../auth";
 import { db } from "@/db/index";

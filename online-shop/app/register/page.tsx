@@ -19,7 +19,7 @@ export default function Register() {
         e.preventDefault();
         
         try{
-            console.log(formData);
+
             setLoading(true);
             const result =  await signUp.email({
                 email: formData.email,
