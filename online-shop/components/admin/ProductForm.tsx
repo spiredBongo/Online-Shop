@@ -1,11 +1,15 @@
 'use client'
 
-import { createProduct } from "@/lib/actions/product";
+import { createProduct, updateProduct } from "@/lib/actions/product";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link  from "next/link";
+import {products} from "@/db/schemas"
 
+type Product = typeof products.$inferSelect;
 
-export default function ProductForm() {
+export default function ProductForm({product} : {product?: Product}) {
+
     const [formData, setFormData] = useState({
         name : "",
         slug : "",
@@ -21,14 +25,15 @@ export default function ProductForm() {
 
     async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
         
-        
         event.preventDefault();
         setLoading(true);
         setErrors("");
 
          try {
 
-            const response = await createProduct(formData);
+              const response = product
+                    ? await updateProduct(product.id, formData)
+                    : await createProduct(formData);
 
             if (!response.success) {
                 setErrors("An error occurred while submitting the form.");
@@ -46,8 +51,13 @@ export default function ProductForm() {
 
     }
 
+
+
     return(
         <>
+        <div>
+            <Link href="/admin/products">Back to Products</Link>
+        </div>
            <form onSubmit={handleSubmit}>
                 <label>Name</label>
                 <input placeholder="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
@@ -70,7 +80,7 @@ export default function ProductForm() {
                 </select>
                 <button type="submit" disabled={loading}>Submit</button>
                 {errors && <p>{errors}</p>}
-
+                
            </form>
 
         </>

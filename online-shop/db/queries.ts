@@ -52,3 +52,12 @@ export async function getCategoryById(categoryId : number) {
     
     return result[0] ?? null;
 }
+
+export async function getProductById(productId : number) {
+    
+    const result = await db.select()
+    .from(products)
+    .where(eq(products.id, productId));
+
+    return result[0] ?? null;
+}   
