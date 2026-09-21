@@ -1,0 +1,258 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ---------------------------------------------------------------------------
+   Paletă: piatră caldă + accent chihlimbar. Fără albastru nicăieri.
+   Hue-urile stau în intervalul 55–80 (cald) și 25 (roșu pentru destructive).
+   Fundalul e intenționat "ridicat" (L ≈ 0.22), nu negru.
+--------------------------------------------------------------------------- */
+
+:root,
+.dark {
+	--background: oklch(0.2183 0.0089 67);
+	--foreground: oklch(0.9264 0.0092 76);
+
+	--card: oklch(0.2571 0.0104 67);
+	--card-foreground: oklch(0.9264 0.0092 76);
+
+	--popover: oklch(0.2571 0.0104 67);
+	--popover-foreground: oklch(0.9264 0.0092 76);
+
+	/* accentul: chihlimbar cald */
+	--primary: oklch(0.7783 0.1435 71);
+	--primary-foreground: oklch(0.2183 0.0143 67);
+
+	--secondary: oklch(0.3106 0.0124 67);
+	--secondary-foreground: oklch(0.9264 0.0092 76);
+
+	--muted: oklch(0.3106 0.0124 67);
+	--muted-foreground: oklch(0.7164 0.0152 74);
+
+	--accent: oklch(0.3398 0.0159 67);
+	--accent-foreground: oklch(0.9264 0.0092 76);
+
+	--destructive: oklch(0.6885 0.1752 26);
+	--destructive-foreground: oklch(0.9264 0.0092 76);
+
+	--border: oklch(1 0 0 / 10%);
+	--input: oklch(1 0 0 / 14%);
+	--ring: oklch(0.7783 0.1435 71 / 55%);
+
+	--radius: 0.75rem;
+
+	--sidebar: oklch(0.2571 0.0104 67);
+	--sidebar-foreground: oklch(0.9264 0.0092 76);
+	--sidebar-primary: oklch(0.7783 0.1435 71);
+	--sidebar-primary-foreground: oklch(0.2183 0.0143 67);
+	--sidebar-accent: oklch(0.3398 0.0159 67);
+	--sidebar-accent-foreground: oklch(0.9264 0.0092 76);
+	--sidebar-border: oklch(1 0 0 / 10%);
+	--sidebar-ring: oklch(0.7783 0.1435 71 / 55%);
+}
+
+@theme inline {
+	--font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+	--font-heading: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-destructive-foreground: var(--destructive-foreground);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+
+	--color-sidebar: var(--sidebar);
+	--color-sidebar-foreground: var(--sidebar-foreground);
+	--color-sidebar-primary: var(--sidebar-primary);
+	--color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+	--color-sidebar-accent: var(--sidebar-accent);
+	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+	--color-sidebar-border: var(--sidebar-border);
+	--color-sidebar-ring: var(--sidebar-ring);
+
+	--radius-sm: calc(var(--radius) * 0.6);
+	--radius-md: calc(var(--radius) * 0.8);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) * 1.4);
+	--radius-2xl: calc(var(--radius) * 1.8);
+	--radius-3xl: calc(var(--radius) * 2.2);
+	--radius-4xl: calc(var(--radius) * 2.6);
+
+	/* ----------------------------- animații ----------------------------- */
+	--animate-rise: rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+	--animate-appear: appear 0.5s ease-out both;
+	--animate-slide-right: slide-right 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+	--animate-drift: drift 9s ease-in-out infinite;
+	--animate-sheen: sheen 3s linear infinite;
+	--animate-pop: pop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+	@keyframes rise {
+		from {
+			opacity: 0;
+			transform: translateY(16px);
+		}
+		to {
+			opacity: 1;
+			transform: none;
+		}
+	}
+
+	@keyframes appear {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+
+	@keyframes slide-right {
+		from {
+			opacity: 0;
+			transform: translateX(-14px);
+		}
+		to {
+			opacity: 1;
+			transform: none;
+		}
+	}
+
+	@keyframes drift {
+		0%,
+		100% {
+			transform: translate3d(0, 0, 0) scale(1);
+		}
+		50% {
+			transform: translate3d(0, -18px, 0) scale(1.05);
+		}
+	}
+
+	@keyframes sheen {
+		0% {
+			background-position: -140% 0;
+		}
+		100% {
+			background-position: 240% 0;
+		}
+	}
+
+	@keyframes pop {
+		0% {
+			transform: scale(0.6);
+		}
+		60% {
+			transform: scale(1.15);
+		}
+		100% {
+			transform: scale(1);
+		}
+	}
+}
+
+@layer base {
+	* {
+		@apply border-border outline-ring/50;
+	}
+
+	html {
+		@apply font-sans antialiased;
+		scroll-behavior: smooth;
+	}
+
+	body {
+		@apply bg-background text-foreground;
+		min-height: 100dvh;
+	}
+
+	::selection {
+		background: color-mix(in oklch, var(--primary), transparent 65%);
+		color: var(--foreground);
+	}
+}
+
+/* ----------------------------- utilitare ----------------------------- */
+
+/* Containerul standard al paginii. */
+@utility shell {
+	@apply mx-auto w-full max-w-6xl px-4 sm:px-6;
+}
+
+/* Halou cald difuz, folosit în spatele hero-ului. */
+@utility halo {
+	background: radial-gradient(
+		closest-side,
+		color-mix(in oklch, var(--primary), transparent 72%),
+		transparent 100%
+	);
+	filter: blur(28px);
+}
+
+/* Text cu degrade cald, pentru titluri. */
+@utility text-warm-gradient {
+	background-image: linear-gradient(
+		100deg,
+		var(--foreground) 0%,
+		color-mix(in oklch, var(--primary), white 18%) 55%,
+		var(--foreground) 100%
+	);
+	background-size: 220% 100%;
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+}
+
+/* Grilă de puncte foarte discretă, ca textură de fundal. */
+@utility dotted-veil {
+	background-image: radial-gradient(
+		color-mix(in oklch, var(--foreground), transparent 92%) 1px,
+		transparent 1px
+	);
+	background-size: 22px 22px;
+}
+
+/* Ridică elementul la hover — folosit pe carduri. */
+@utility lift {
+	@apply transition-all duration-300 ease-out;
+
+	&:hover {
+		@apply -translate-y-1;
+		box-shadow:
+			0 18px 40px -22px color-mix(in oklch, black, transparent 35%),
+			0 0 0 1px color-mix(in oklch, var(--primary), transparent 78%);
+	}
+}
+
+/* Intrare în cascadă: pui `stagger` pe container și indexul pe copii. */
+@utility stagger {
+	& > * {
+		animation: rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+		animation-delay: calc(var(--i, 0) * 60ms);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}

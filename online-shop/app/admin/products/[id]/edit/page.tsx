@@ -1,6 +1,6 @@
-import { getProductById } from "@/db/queries";
-import ProductForm from "@/components/admin/ProductForm";
 import { notFound } from "next/navigation";
+import ProductForm from "@/components/admin/ProductForm";
+import { getCategoriesByName, getProductById } from "@/db/queries";
 
 export default async function EditProductPage({
   params,
@@ -9,17 +9,12 @@ export default async function EditProductPage({
 }) {
   const { id } = await params;
 
-  const product = await getProductById(Number(id));
+  const [product, categories] = await Promise.all([
+    getProductById(Number(id)),
+    getCategoriesByName(),
+  ]);
 
-  if (!product) {
-    notFound();
-  }
+  if (!product) notFound();
 
-
-  return (
-    <div>
-      <h1>Editează produsul</h1>
-      <ProductForm product={product} />
-    </div>
-  );
+  return <ProductForm product={product} categories={categories} />;
 }

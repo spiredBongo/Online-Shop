@@ -1,48 +1,34 @@
-import Link from "next/link";
-import styles from "./layout.module.css";
+import type { Metadata } from "next";
+import { Geist } from "next/font/google";
+import "./globals.css";
 import CartProvider from "@/components/cart/CartProvider";
-import CartCounter from "@/components/cart/CartCounter";
-import LogoutButton  from "@/components/auth/LogoutButton";
-import { getCurrentUser } from "@/lib/auth";
+import SiteHeader from "@/components/layout/SiteHeader";
+import SiteFooter from "@/components/layout/SiteFooter";
 
+const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
 
-export default async function RootLayout({
+export const metadata: Metadata = {
+  title: {
+    default: "EmberShop — tehnologie aleasă cu cap",
+    template: "%s · EmberShop",
+  },
+  description:
+    "Laptopuri, telefoane, monitoare și audio. Livrare rapidă, retur în 30 de zile.",
+};
+
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-
-  const loggedInUser = await getCurrentUser();   
-  
-
   return (
-    <html lang="en">
-      <body>
-        
+    <html lang="ro" className={`dark ${geist.variable}`}>
+      <body className="flex min-h-dvh flex-col">
         <CartProvider>
-
-        <header>
-                {loggedInUser ? <h1>Welcome, {loggedInUser.name}!</h1> : <h1>Welcome to our Online Shop!</h1>}
-                <div> 
-                <Link href="/products"><button className = {styles.button}>Products</button></Link>
-                <Link href = "/"><button className = {styles.button}>Back to Home</button></Link>
-                <Link href="/login"><button className = {styles.button}>Login</button></Link>
-                <Link href="/register"><button className = {styles.button}>Register</button></Link>
-                <LogoutButton />
-                </div>
-                <CartCounter />
-        </header>
-     
-        {children}
-
-         <footer> 
-          <Link href="/despre" ><button className = {styles.button}>Despre noi</button></Link>
-          <Link href="/contact" ><button className = {styles.button}>Contact</button></Link>
-          <Link href="/cariere" ><button className = {styles.button}>Cariere</button></Link>
-          
-          Shop created by Bogdan Bosoanca, 2024. All rights reserved.
-      </footer>
-          </CartProvider>
+          <SiteHeader />
+          <main className="flex-1">{children}</main>
+          <SiteFooter />
+        </CartProvider>
       </body>
     </html>
   );

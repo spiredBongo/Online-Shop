@@ -1,11 +1,8 @@
 import ProductForm from "@/components/admin/ProductForm";
+import { getCategoriesByName } from "@/db/queries";
 
+export default async function AddProductPage() {
+  const categories = await getCategoriesByName();
 
- export default function AddProductPage() {
-    return(
-        <div>
-            <h1>Add New Product</h1>
-            <ProductForm />
-        </div>
-    );
+  return <ProductForm categories={categories} />;
 }

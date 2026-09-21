@@ -1,44 +1,42 @@
-'use client'
-import { signOut } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+"use client";
+
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Loader2, LogOut } from "lucide-react";
+import { signOut } from "@/lib/auth-client";
+import { Button } from "@/components/ui/button";
 
 export default function LogoutButton() {
-    
-    const router = useRouter();
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
-    async function handleLogout() {
-        setLoading(true);
-        setError("");
-        
-        try {
-            const result = await signOut();
-            
-            if(result.error) {
-                setError("Failed to logout");
-                return;
-            }
-            
-            router.push("/");
-            router.refresh();
-            
-        } catch (error) {
-            setError("Logout failed. Please try again." + (error instanceof Error ? ` Error: ${error.message}` : ""));
-        
-        } finally {
-            setLoading(false);
-        }
-}
+  async function handleLogout() {
+    setLoading(true);
 
-    return(
-        <>
-        
-        <button type="button" disabled={loading} onClick={handleLogout}>
-            Log-out
-        </button>
-        
-        </>
-    )
+    try {
+      const result = await signOut();
+      if (result.error) return;
+
+      router.push("/");
+      router.refresh();
+    } catch (error) {
+      console.error("Deconectarea a eșuat:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      size="sm"
+      disabled={loading}
+      onClick={handleLogout}
+      className="text-muted-foreground"
+    >
+      {loading ? <Loader2 className="animate-spin" /> : <LogOut />}
+      <span className="hidden sm:inline">Ieși din cont</span>
+    </Button>
+  );
 }
