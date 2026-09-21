@@ -2,10 +2,6 @@ import { requireAdmin } from "@/lib/auth"
 import { getProducts } from "@/db/queries";
 import Link from "next/dist/client/link";
 import DeleteOneProductButton from "@/components/admin/DeleteButton";
-import { Delete } from "lucide-react";
-
-
-
 
 export default async function ProductsPage() {
 
