@@ -12,6 +12,7 @@ export default async function AdminLayout({
 }) {
   await requireAdmin();
 
+  
   return (
     <div className="shell py-12">
       <div className="animate-rise flex flex-wrap items-center gap-3">
