@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "@/db";
+import { db } from "../db";
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
@@ -19,6 +19,10 @@ export const auth = betterAuth({
                     defaultValue: "user",
                 },
             },
+        },
+        rateLimit: {
+            enabled: true,
+            storage: "database",
         },
 });
 

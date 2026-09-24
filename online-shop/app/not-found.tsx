@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 export default function NotFound() {
   return (
     <div className="relative flex min-h-[calc(100dvh-4rem)] items-center justify-center overflow-hidden px-4">
-      <div className="halo pointer-events-none absolute size-[28rem] animate-drift" />
+      <div className="halo pointer-events-none absolute size-112 animate-drift" />
 
       <div className="animate-rise relative flex flex-col items-center text-center">
         <span className="flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
