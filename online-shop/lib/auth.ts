@@ -36,7 +36,6 @@ export const getCurrentUser = async () => {
 
 export async function requireUser() {
     const user = await getCurrentUser();
-    console.log("RequireUser: user = ", user);
     if (!user) {
         redirect("/login");
     }
