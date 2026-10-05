@@ -4,9 +4,6 @@ import { db } from "../db";
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
-
-
-
 export const auth = betterAuth({
     database: drizzleAdapter(db, { 
         provider: "pg",
@@ -24,6 +21,7 @@ export const auth = betterAuth({
         rateLimit: {
             enabled: true,
             storage: "database",
+            input:false,
         },
 });
 
