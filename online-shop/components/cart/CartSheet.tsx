@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Minus, Plus, ShoppingBag, ShoppingCart, Trash2 } from "lucide-react";
 import { useCart } from "./CartContext";
 import { Button } from "@/components/ui/button";
@@ -26,11 +25,7 @@ export default function CartSheet() {
     0
   );
 
-  // Face bulina să "pocnească" de fiecare dată când se schimbă numărul.
-  const [pulse, setPulse] = useState(0);
-  useEffect(() => {
-    if (count > 0) setPulse((p) => p + 1);
-  }, [count]);
+  
 
   return (
     <Sheet>
@@ -44,7 +39,7 @@ export default function CartSheet() {
           <ShoppingCart />
           {count > 0 && (
             <span
-              key={pulse}
+              key={count}
               className="absolute -top-1.5 -right-1.5 flex size-4.5 animate-pop items-center justify-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground tabular-nums"
             >
               {count > 99 ? "99+" : count}
