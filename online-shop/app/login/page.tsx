@@ -42,8 +42,7 @@ export default function Login() {
       router.refresh();
     } catch (error) {
       setError(
-        "Autentificarea a eșuat. Încearcă din nou." +
-          (error instanceof Error ? ` Eroare: ${error.message}` : "")
+        "Autentificarea a eșuat. Încearcă din nou."
       );
       setLoading(false);
     }
@@ -83,6 +82,7 @@ export default function Login() {
                 type="password"
                 autoComplete="current-password"
                 placeholder="••••••••"
+                minLength={8}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required

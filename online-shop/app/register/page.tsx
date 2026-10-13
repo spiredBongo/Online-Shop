@@ -17,6 +17,27 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
+function getSignUpErrorMessage(code?: string, status?: number) {
+  if (status === 429) {
+    return "Prea multe încercări. Încearcă din nou peste câteva minute.";
+  }
+
+  switch (code) {
+    case "PASSWORD_COMPROMISED":
+      return "Parola aceasta a apărut într-o breșă de date. Alege alta.";
+    case "PASSWORD_TOO_SHORT":
+      return "Parola trebuie să aibă cel puțin 8 caractere.";
+    case "PASSWORD_TOO_LONG":
+      return "Parola este prea lungă.";
+    case "INVALID_EMAIL":
+      return "Adresa de email nu este validă.";
+    case "INVALID_NAME":
+       return "Numele trebuie să aibă între 2 și 50 de caractere."; 
+    default:
+      return "Nu am putut crea contul. Verifică datele și încearcă din nou.";
+  }
+}
+
 export default function Register() {
   const [formData, setFormData] = useState({
     email: "",
@@ -27,7 +48,7 @@ export default function Register() {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
     try {
@@ -39,17 +60,14 @@ export default function Register() {
       });
 
       if (result.error) {
-        setError(result.error.message ?? "A apărut o eroare.");
+        setError(getSignUpErrorMessage(result.error.code, result.error.status));
       } else {
         setError("");
         router.push("/login");
       }
     } catch (err) {
-      if (err instanceof Error) {
-        setError("A apărut o eroare: " + err.message);
-      } else {
-        setError("A apărut o eroare necunoscută.");
-      }
+      console.error("Sign-up error:", err);
+      setError("A apărut o eroare. Încearcă din nou.");
     } finally {
       setLoading(false);
     }
@@ -105,6 +123,7 @@ export default function Register() {
                 type="password"
                 autoComplete="new-password"
                 placeholder="minim 8 caractere"
+                minLength={8}
                 value={formData.password}
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })
