@@ -1,6 +1,11 @@
 "use server";
 
-import { IdForProductDelete, IdForUpdateProduct, ProductSchemaValidation, ProductUpdateSchemaValidation } from "@/lib/validations";
+import {
+  IdForProductDelete,
+  IdForUpdateProduct,
+  ProductSchemaValidation,
+  ProductUpdateSchemaValidation,
+} from "@/lib/validations";
 import { requireAdmin } from "../auth";
 import { db } from "@/db/index";
 import { products } from "@/db/schemas";
@@ -10,94 +15,116 @@ import { eq } from "drizzle-orm";
 import { NeonDbError } from "@neondatabase/serverless";
 
 export async function createProduct(productData: unknown) {
-    "use server";
-    await requireAdmin();
+  "use server";
+  await requireAdmin();
 
-    const result = ProductSchemaValidation.safeParse(productData);
+  const result = ProductSchemaValidation.safeParse(productData);
 
-    if (!result.success) {
-        return { success: false, errors: treeifyError(result.error) };
-    }
+  if (!result.success) {
+    return { success: false, errors: treeifyError(result.error) };
+  }
 
-    try {
+  try {
     const [newProduct] = await db
-        .insert(products)
-        .values(result.data)
-        .returning()
+      .insert(products)
+      .values(result.data)
+      .returning();
 
-        revalidatePath("/products");
-        revalidatePath("/admin/products");
+    revalidatePath("/products");
+    revalidatePath("/admin/products");
 
-    return { success: true, product: newProduct };  
-
-    }catch (error) {
-
-
-        if(error instanceof NeonDbError && error.code === "23505") {
-            return { success: false, errors: { slug: "Acest slug există deja." } };
-        }
-
-        
-        return { success: false, errors: { general: "A apărut o eroare la crearea produsului." } };
+    return { success: true, product: newProduct };
+  } catch (error) {
+    if (error instanceof NeonDbError && error.code === "23505") {
+      return { success: false, errors: { slug: "Acest slug există deja." } };
     }
-    
-}   
+
+    if (error instanceof NeonDbError && error.code === "23503") {
+      return {
+        success: false,
+        errors: { categoryId: "Categoria selectată nu există." },
+      };
+    }
+
+    return {
+      success: false,
+      errors: { general: "A apărut o eroare la crearea produsului." },
+    };
+  }
+}
 
 export async function updateProduct(productId: number, productData: unknown) {
-    "use server";
+  "use server";
 
-    await requireAdmin();
+  await requireAdmin();
 
-    const result = ProductUpdateSchemaValidation.safeParse(productData);
-    const idValidation = IdForUpdateProduct.safeParse(productId);
+  const result = ProductUpdateSchemaValidation.safeParse(productData);
+  const idValidation = IdForUpdateProduct.safeParse(productId);
 
-    if(!idValidation.success) {
-        return { success: false, errors: { productId: "Invalid product ID" } };
-    }
+  if (!idValidation.success) {
+    return { success: false, errors: { productId: "Invalid product ID" } };
+  }
 
-    if (!result.success) {
-        return { success: false, errors: treeifyError(result.error) };
-    }
+  if (!result.success) {
+    return { success: false, errors: treeifyError(result.error) };
+  }
 
+  try {
     const [updatedProduct] = await db
-        .update(products)
-        .set(result.data)
-        .where(eq(products.id, idValidation.data))
-        .returning();
+      .update(products)
+      .set(result.data)
+      .where(eq(products.id, idValidation.data))
+      .returning();
 
     if (!updatedProduct) {
-        return { success: false, errors: { productId: "Product not found" } };
+      return { success: false, errors: { productId: "Product not found" } };
     }
 
     revalidatePath("/products");
     revalidatePath("/admin/products");
 
     return { success: true, product: updatedProduct };
+  } catch (error) {
+    if (error instanceof NeonDbError && error.code === "23505") {
+      return { success: false, errors: { slug: "Acest slug există deja." } };
+    }
+
+    if (error instanceof NeonDbError && error.code === "23503") {
+      return {
+        success: false,
+        errors: { categoryId: "Categoria selectată nu există." },
+      };
+    }
+  }
+
+  return {
+    success: false,
+    errors: { general: "A apărut o eroare la actualizarea produsului." },
+  };
 }
 
 export async function deleteProduct(productId: number) {
-    "use server";
+  "use server";
 
-    await requireAdmin();
+  await requireAdmin();
 
-    const result = IdForProductDelete.safeParse(productId);
+  const result = IdForProductDelete.safeParse(productId);
 
-    if (!result.success) {
-        return { success: false, errors: treeifyError(result.error) };
-    }
+  if (!result.success) {
+    return { success: false, errors: treeifyError(result.error) };
+  }
 
-    const deleted = await 
-        db
-        .delete(products)
-        .where(eq(products.id, result.data))
-        .returning();
+  const deleted = await db
+    .delete(products)
+    .where(eq(products.id, result.data))
+    .returning();
 
-    if (deleted.length === 0) {
-        return { success: false, errors: { productId: "Product not found" } };
-    }
+  if (deleted.length === 0) {
+    return { success: false, errors: { productId: "Product not found" } };
+  }
 
-    revalidatePath("/products");
-    revalidatePath("/admin/products");
+  revalidatePath("/products");
+  revalidatePath("/admin/products");
 
-    return { success: true };
+  return { success: true };
 }
