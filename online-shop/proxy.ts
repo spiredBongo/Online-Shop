@@ -1,16 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getSessionCookie } from "better-auth/cookies";
 
 export function proxy(request: NextRequest) {
-  const hasSession =
-  request.cookies.has("__Secure-better-auth.session_token");
+  const sessionCookie = getSessionCookie(request);
 
-if (!hasSession) {
-  return NextResponse.redirect(new URL("/login", request.url));
-}
+  if (!sessionCookie) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
 
-    return NextResponse.next();
+  return NextResponse.next();
 }
 
 export const config = {
-    matcher: ["/admin/:path*", "/account/:path*"],
-}
+  matcher: ["/admin/:path*", "/account/:path*"],
+};

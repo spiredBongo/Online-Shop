@@ -4,6 +4,7 @@ import ProductCard from "@/components/ProductCard";
 import FilterButtons from "./FilterButtons";
 import { Separator } from "@/components/ui/separator";
 import { getCategoriesByName, getProducts } from "@/db/queries";
+import { ProductFiltersSchemaValidation } from "@/lib/validations";
 
 export const metadata: Metadata = {
   title: "Produse",
@@ -14,14 +15,17 @@ export default async function ProductPage({
 }: {
   searchParams: Promise<{ cat?: string; sort?: string }>;
 }) {
-  const { cat, sort } = await searchParams;
+  const params = await searchParams;
+  const result = ProductFiltersSchemaValidation.safeParse(params);
+
+  const filters = result.success ? result.data : {};
 
   const [allProducts, allCategories] = await Promise.all([
-    getProducts({ categoryId: cat ? Number(cat) : undefined, sort }),
+    getProducts({ categoryId: filters.cat, sort: filters.sort }),
     getCategoriesByName(),
   ]);
 
-  const activeCategory = allCategories.find((c) => String(c.id) === cat);
+  const activeCategory = allCategories.find((c) => c.id === filters.cat);
 
   return (
     <div className="shell py-12">
@@ -54,7 +58,7 @@ export default async function ProductPage({
       ) : (
         <div
           /* `key` forțează re-rularea animației la fiecare schimbare de filtru */
-          key={`${cat ?? "all"}-${sort ?? "name"}`}
+          key={`${filters.cat ?? "all"}-${filters.sort ?? "name"}`}
           className="stagger mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         >
           {allProducts.map((product, i) => (

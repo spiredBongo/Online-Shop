@@ -1,12 +1,13 @@
 "use server";
 
-import { IdForProductDelete, ProductSchemaValidation, ProductUpdateSchemaValidation } from "@/lib/validations";
+import { IdForProductDelete, IdForUpdateProduct, ProductSchemaValidation, ProductUpdateSchemaValidation } from "@/lib/validations";
 import { requireAdmin } from "../auth";
 import { db } from "@/db/index";
 import { products } from "@/db/schemas";
 import { treeifyError } from "zod/v4/core";
 import { revalidatePath } from "next/cache";
 import { eq } from "drizzle-orm";
+import { NeonDbError } from "@neondatabase/serverless";
 
 export async function createProduct(productData: unknown) {
     "use server";
@@ -18,6 +19,7 @@ export async function createProduct(productData: unknown) {
         return { success: false, errors: treeifyError(result.error) };
     }
 
+    try {
     const [newProduct] = await db
         .insert(products)
         .values(result.data)
@@ -26,7 +28,19 @@ export async function createProduct(productData: unknown) {
         revalidatePath("/products");
         revalidatePath("/admin/products");
 
-    return { success: true, product: newProduct };
+    return { success: true, product: newProduct };  
+
+    }catch (error) {
+
+
+        if(error instanceof NeonDbError && error.code === "23505") {
+            return { success: false, errors: { slug: "Acest slug există deja." } };
+        }
+
+        
+        return { success: false, errors: { general: "A apărut o eroare la crearea produsului." } };
+    }
+    
 }   
 
 export async function updateProduct(productId: number, productData: unknown) {
@@ -35,6 +49,11 @@ export async function updateProduct(productId: number, productData: unknown) {
     await requireAdmin();
 
     const result = ProductUpdateSchemaValidation.safeParse(productData);
+    const idValidation = IdForUpdateProduct.safeParse(productId);
+
+    if(!idValidation.success) {
+        return { success: false, errors: { productId: "Invalid product ID" } };
+    }
 
     if (!result.success) {
         return { success: false, errors: treeifyError(result.error) };
@@ -43,8 +62,12 @@ export async function updateProduct(productId: number, productData: unknown) {
     const [updatedProduct] = await db
         .update(products)
         .set(result.data)
-        .where(eq(products.id, productId))
+        .where(eq(products.id, idValidation.data))
         .returning();
+
+    if (!updatedProduct) {
+        return { success: false, errors: { productId: "Product not found" } };
+    }
 
     revalidatePath("/products");
     revalidatePath("/admin/products");

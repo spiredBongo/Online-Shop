@@ -48,7 +48,7 @@ export default function ProductForm({
 
   const router = useRouter();
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
     setErrors("");
@@ -58,15 +58,23 @@ export default function ProductForm({
         ? await updateProduct(product.id, formData)
         : await createProduct(formData);
 
-      if (!response.success) {
-        setErrors("A apărut o eroare la trimiterea formularului.");
-      } else {
-        setErrors("");
-        router.push("/admin/products");
-      }
+     if (!response.success) {
+  const errors = response.errors;
+
+  if (errors && "slug" in errors) {
+    setErrors(String(errors.slug));
+  } else if (errors && "general" in errors) {
+    setErrors(String(errors.general));
+  } else {
+    setErrors("A apărut o eroare la trimiterea formularului.");
+  }
+} else {
+  setErrors("");
+  router.push("/admin/products");
+}
     } catch (error) {
       setErrors(
-        "A apărut o eroare. " + (error instanceof Error ? error.message : "")
+        "A apărut o eroare. "
       );
     } finally {
       setLoading(false);
