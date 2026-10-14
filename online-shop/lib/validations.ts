@@ -8,8 +8,11 @@ const slug = z
   .min(3)
   .max(100);
 const description = z.string().trim().min(3).max(500);
+
 const price = z.coerce.number().positive().max(999999.99).multipleOf(0.01);
+
 const stock = z.coerce.number().int().positive();
+
 const categoryId = z.coerce.number().int().positive();
 
 export const ProductSchemaValidation = z.object({
