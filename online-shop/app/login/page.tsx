@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,14 +33,21 @@ export default function Login() {
     try {
       const result = await signIn.email({ email, password });
 
+
       if (result.error) {
         setError("Emailul sau parola sunt greșite. Încearcă din nou.");
         setLoading(false);
         return;
       }
 
+      if (result.data && "twoFactorRedirect" in result.data) {
+        router.push("/auth/two-factor");
+        return;
+      }
+
       router.push("/products");
       router.refresh();
+
     } catch (error) {
       setError(
         "Autentificarea a eșuat. Încearcă din nou."
