@@ -3,9 +3,10 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "../db";
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
-import { haveIBeenPwned } from "better-auth/plugins/haveibeenpwned";
+import { haveIBeenPwned } from "better-auth/plugins";
 import { AccountSchemaValidation } from "./validations";
 import { createAuthMiddleware, APIError } from "better-auth/api";
+import { twoFactor } from "better-auth/plugins";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -40,7 +41,12 @@ export const auth = betterAuth({
     },
   },
 
-  plugins: [haveIBeenPwned()],
+  plugins: [
+    haveIBeenPwned(),
+    twoFactor({
+      issuer: "Online-Shop",
+    }),
+  ],
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
       if (ctx.path !== "/sign-up/email") return;
