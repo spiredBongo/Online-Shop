@@ -1,4 +1,4 @@
-import { email, z } from "zod";
+import { z } from "zod";
 
 const name = z.string().trim().min(3).max(100);
 const slug = z

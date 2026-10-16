@@ -65,8 +65,6 @@ export const auth = betterAuth({
   },
 });
 
-console.log("2FA activ pe server:", "enableTwoFactor" in auth.api);
-
 export const getCurrentUser = async () => {
   "use server";
   const session = await auth.api.getSession({
